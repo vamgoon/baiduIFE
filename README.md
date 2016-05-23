@@ -1,3 +1,3 @@
 # baiduIFE
 # 
-<a href="www.baidu.com">ss</a>
+<a href="http://www.baidu.com">ss</a>
