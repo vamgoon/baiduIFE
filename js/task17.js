@@ -3,7 +3,7 @@
  */
 
 /**
- * addListener方法，跨浏览器的时间监听
+ * addListener方法，跨浏览器的事件监听
  * @param element
  * @param event
  * @param listener
