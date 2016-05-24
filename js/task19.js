@@ -74,7 +74,7 @@ function arrSort(arr) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
-                swap.push(JSON.parse(JSON.stringify(arr)));
+                swap.push(arr.join(" ").split(" "));
             }
         }
     }
@@ -144,9 +144,9 @@ function handle(event) {
         }
         else if (target.value === "sortData") {
             var swap = arrSort(o.arr);
-            var timer = setInterval(paint, 100);
+            var timer = setInterval(paint, 1);
             function paint() {
-                var snapshot = swap.shift();
+                var snapshot = swap.shift() || [];
                 if (snapshot.length !== 0) {
                     render(snapshot);
                 }
