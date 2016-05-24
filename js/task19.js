@@ -67,17 +67,19 @@ function getFiftyNums() {
  * @param arr
  */
 function arrSort(arr) {
-    var i, j, temp;
+    var i, j, temp, swap = [];
     for (i=0;i<arr.length-1;i++) {
-        for (j=i+1;j<arr.length;j++) {
+        for (j = i + 1; j < arr.length; j++) {
             if (arr[i]>arr[j]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
+                swap.push(JSON.parse(JSON.stringify(arr)));
             }
         }
     }
-    return arr;
+
+    return swap;
 }
 
 /**
@@ -141,16 +143,28 @@ function handle(event) {
             render(o.arr);
         }
         else if (target.value === "sortData") {
-            render(arrSort(o.arr));
+            var swap = arrSort(o.arr);
+            var timer = setInterval(paint, 100);
+            function paint() {
+                var snapshot = swap.shift();
+                if (snapshot.length !== 0) {
+                    render(snapshot);
+                }
+                else {
+                    clearInterval(timer);
+                }
+            }
         }
-        o[target.value](inputTrim);
-        inputValue.value = "";
-        render(o.arr);
+        else {
+            o[target.value](inputTrim);
+            inputValue.value = "";
+            render(o.arr);
+        }
     }
     else if (target.nodeName === "SPAN") {
         var index = [].indexOf.call(target.parentNode.parentNode.children, target.parentNode);
 
-        o.str.splice(index,1);
+        o.arr.splice(index,1);
         alert(target.innerText);
         target.parentNode.parentNode.removeChild(target.parentNode);
     }
