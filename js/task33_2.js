@@ -25,26 +25,24 @@ function checkInput(valueIn) {
     if (valueIn.length === 0) {
         alert("输入不能为空，请重新输入");
     }
-    else if (/[^a-zA-Z\s+\d]/gi.test(valueIn)) {
-        alert("输入有误，请输入正确指令");
-    }
     else {
-        return true;
+        return valueIn.split(/([A-Z]+)\s+(\d+)/g);
     }
 }
 
 function handler() {
     var $commandInput = $("#commandInput");
     var $commandInputValue = $commandInput.val();
+    var x = checkInput($commandInputValue);
 
-    if (checkInput($commandInputValue)) {
-        activeDiv.checkCommand($commandInputValue);
+    if (x) {
+        activeDiv.checkCommand(x[0] || x[1],x[2]);
     }
 
 }
 
 function init() {
-    activeDiv.init(5, 5);
+    activeDiv.init(2, 3);
     
     var $commandBtn = $("#commandBtn")[0];
 
