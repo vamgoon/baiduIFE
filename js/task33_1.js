@@ -81,20 +81,20 @@ var activeDiv = (function () {
 
         var tempX = getXY().X;
         var tempY = getXY().Y;
-        var steps = parseInt(steps || 1);
+        var _steps = parseInt(steps || 1);
 
         switch (state%4) {
             case 0:
-                _init(tempX,tempY - steps);
+                _init(tempX,tempY - _steps);
                 break;
             case 1:
-                _init(tempX + steps, tempY);
+                _init(tempX + _steps, tempY);
                 break;
             case 2:
-                _init(tempX,tempY + steps);
+                _init(tempX,tempY + _steps);
                 break;
             case 3:
-                _init(tempX - steps, tempY);
+                _init(tempX - _steps, tempY);
                 break;
         }
     }
