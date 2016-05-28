@@ -36,6 +36,7 @@
             height: 620px;
             position: relative;
             margin-bottom: 20px;
+            float: left;
         }
         #div-container {
             border-right: 2px solid gray;
@@ -51,7 +52,7 @@
             border: 1px solid gray;
             width: 30px;
             height: 30px;
-            background-color: blue;
+            background-color: aliceblue;
             float: left;
         }
         .activediv {
@@ -63,58 +64,70 @@
             /*-o-transform: rotate(10deg);*/
             /*transform: rotate(0deg);*/
         }
+        #command {
+            width: 500px;
+            height: 700px;
+            background-color: aqua;
+            float: left;
+            margin-left: 100px;
+        }
     </style>
 </head>
 <body>
 <div class="square">
-    <ol id="row-ol">
-        <li>0</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>11</li>
-        <li>12</li>
-        <li>13</li>
-        <li>14</li>
-        <li>15</li>
-        <li>16</li>
-        <li>17</li>
-        <li>18</li>
-    </ol>
-    <ol id="col-ol">
-        <li>0</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-        <li>11</li>
-        <li>12</li>
-        <li>13</li>
-        <li>14</li>
-        <li>15</li>
-        <li>16</li>
-        <li>17</li>
-        <li>18</li>
-    </ol>
-    <div id="div-container"></div>
+        <ol id="row-ol">
+            <li>0</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+            <li>10</li>
+            <li>11</li>
+            <li>12</li>
+            <li>13</li>
+            <li>14</li>
+            <li>15</li>
+            <li>16</li>
+            <li>17</li>
+            <li>18</li>
+        </ol>
+        <ol id="col-ol">
+            <li>0</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+            <li>10</li>
+            <li>11</li>
+            <li>12</li>
+            <li>13</li>
+            <li>14</li>
+            <li>15</li>
+            <li>16</li>
+            <li>17</li>
+            <li>18</li>
+        </ol>
+        <div id="div-container"></div>
+    </div>
+<div id="command">
+    <textarea id="commandText" rows="10" cols="58"></textarea>
+    <div id="commandBtn">
+        <input type="button" value="执行"/>
+        <input type="button" value="清空"/>
+    </div>
 </div>
-<input type="text" id="commandInput">
-<input type="button" value="执行" id="commandBtn">
+
 <script src="../js/jquery-1.12.3.js"></script>
 <script src="../js/task33_1.js"></script>
-<script src="../js/task33_2.js"></script>
 </body>
 </html>
