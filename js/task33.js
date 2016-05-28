@@ -2,6 +2,24 @@
  * Created by LoveS on 2016/5/24.
  */
 
+/**
+* addListener方法，跨浏览器的时间监听
+* @param element
+* @param event
+* @param listener
+*/
+function addListener(element, event, listener) {
+    if (element.addEventListener) {
+        element.addEventListener(event, listener, false);
+    }
+    else if (element.attachEvent) {
+        element.attachEvent("on" + event, listener);
+    }
+    else {
+        element["on" + event] = listener;
+    }
+}    
+
 var square = (function () {
 
     function _paintChart() {
@@ -21,8 +39,6 @@ var square = (function () {
 square.paintChart();
 
 var activeDiv = (function () {
-    var terX;//记录terminalX/Y 和nowX/Y的距离
-    var terY;//记录terminalX/Y 和nowX/Y的距离
     var $activeDiv = $("div[title = '19,1']");
     var state = 0;//记录状态
     var command = {
@@ -39,16 +55,16 @@ var activeDiv = (function () {
             turn(-90);
         },
         "TRA LEF": function (steps) {
-            _init(getXY().X - parseInt(steps || 1), getXY().Y);
+            move(getXY().X - parseInt(steps || 1), getXY().Y);
         },
         "TRA TOP": function (steps) {
-            _init(getXY().X, getXY().Y - parseInt(steps || 1));
+            move(getXY().X, getXY().Y - parseInt(steps || 1));
         },
         "TRA RIG": function (steps) {
-            _init(getXY().X + parseInt(steps || 1), getXY().Y);
+            move(getXY().X + parseInt(steps || 1), getXY().Y);
         },
         "TRA BOT": function (steps) {
-            _init(getXY().X, getXY().Y + parseInt(steps || 1));
+            move(getXY().X, getXY().Y + parseInt(steps || 1));
         },
         "MOV LEF": function (steps) {
             turnAndGo(-1, steps);
@@ -87,34 +103,12 @@ var activeDiv = (function () {
                 turn(-90);
                 break;
         }
-        setTimeout(function () {
-            moveSomeSteps(steps)
-        },300);
+        moveSomeSteps(steps);
     }
 
     function turn(deg) {
-        var x = 0;
-        var nowState = state%4;
-        var timer = setInterval(function () {
-            if (deg >= 0) {
-                if ((x + 90 * nowState) <= (deg + 90 * nowState)) {
-                    $activeDiv.css("transform","rotate("+(x + 90 * nowState)+"deg)");
-                    x += 2;
-                } else {
-                    clearInterval(timer);
-                }
-            }
-            else {
-                if ((x + 90 * nowState) >= (deg + 90 * nowState)) {
-                    $activeDiv.css("transform","rotate("+(x + 90 * nowState)+"deg)");
-                    x -= 2;
-                } else {
-                    clearInterval(timer);
-                }
-            }
-        },1);
-
-        state = (state + Math.floor(deg/90) + 4)%4;
+        $activeDiv.css("transform","rotate("+ (deg+state*90) +"deg)");
+        state = state + deg/90;
     }
 
     function getXY() {
@@ -140,70 +134,55 @@ var activeDiv = (function () {
 
         switch (state%4) {
             case 0:
-                _init(tempX,tempY - _steps);
+                move(tempX,tempY - _steps);
                 break;
             case 1:
-                _init(tempX + _steps, tempY);
+                move(tempX + _steps, tempY);
                 break;
             case 2:
-                _init(tempX,tempY + _steps);
+                move(tempX,tempY + _steps);
                 break;
             case 3:
-                _init(tempX - _steps, tempY);
+                move(tempX - _steps, tempY);
                 break;
         }
     }
 
-    function handlerCommand(i) {
+    function handlerCommand() {
         var commandTextValue = $("#commandText").val();
         var commandArr = commandTextValue.trim().split(";");
         commandArr.pop();
-        var arr = commandArr[i].trim().split(/([A-Z]+)\s+(\d+)/g);
+        var arr = commandArr[0].trim().split(/([A-Z]+)\s+(\d+)/g);
         var str = arr.length === 4 ? arr[0] + arr[1] : arr[0];
-        console.log(arr)
         command[str](arr[2]);
+        var  x = 1;
+        var timer = setInterval(function () {
+            if (x === commandArr.length) {
+                clearInterval(timer);
+            } else {
+                var arr = commandArr[x].trim().split(/([A-Z]+)\s+(\d+)/g);
+                var str = arr.length === 4 ? arr[0] + arr[1] : arr[0];
+                command[str](arr[2]);
+                x++;
+            }
+        },200);
     }
 
-    function graduallyMove(terminalXY, nowXY, direc) {
-        var differ = terminalXY - nowXY;
-        var x = 0;
-        if (differ > 0) {
-            var timer = setInterval(function () {
-                if (x <= differ) {
-                    $activeDiv.css(direc, x+nowXY+"px");
-                    x += 2;
-                } else {
-                    clearInterval(timer);
-                }
-            },1);
-        }
-        else {
-            var timer = setInterval(function () {
-                if (x > differ) {
-                    x -= 2;
-                    $activeDiv.css(direc,nowXY + x+"px");
-                } else {
-                    clearInterval(timer);
-                }
-            },1);
-        }
-    }
 
-    function _init(x, y) {
+
+    function move(x, y) {
         
         var nowX = parseInt(getXY().left);
         var nowY = parseInt(getXY().top);
         var terminalX = parseInt(changeXY(x, y).left);
         var terminalY = parseInt(changeXY(x, y).top);
-        terX = 1;
-        terY = terminalY;
 
         if (terminalX !== nowX) {
-            graduallyMove(terminalX, nowX, "left");
-
+            $activeDiv.css("left", terminalX+"px");
         } else {
-            graduallyMove(terminalY, nowY, "top");
+            $activeDiv.css("top", terminalY+"px");
         }
+
     }
     
     return {
@@ -211,37 +190,18 @@ var activeDiv = (function () {
             $activeDiv.addClass("activediv");
             $activeDiv.css(changeXY(x, y));
         },
-        handlerCommand: function (i) {
-            handlerCommand(i);
+        handlerCommand: function () {
+            handlerCommand();
         }
     }
 })();
+  
 
-  /**
-   * addListener方法，跨浏览器的时间监听
-   * @param element
-   * @param event
-   * @param listener
-   */
-  function addListener(element, event, listener) {
-      if (element.addEventListener) {
-          element.addEventListener(event, listener, false);
-      }
-      else if (element.attachEvent) {
-          element.attachEvent("on" + event, listener);
-      }
-      else {
-          element["on" + event] = listener;
-      }
-  }
-
-  function init() {
-      var commandBtn = document.getElementById("commandBtn");
-
-      activeDiv.init(2, 18);
-      addListener(commandBtn, "click", function () {
-          activeDiv.handlerCommand(0);
-      });
-  }
-
-  init();
+function init() {
+    var commandBtn = document.getElementById("commandBtn");
+    activeDiv.init(1, 1);
+    addListener(commandBtn, "click", function () {
+        activeDiv.handlerCommand();
+    });
+}
+init();
