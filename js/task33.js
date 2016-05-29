@@ -77,6 +77,12 @@ var activeDiv = (function () {
         },
         "MOV BOT": function (steps) {
             turnAndGo(2, steps);
+        },
+        "PAINT": function (x) {
+            paint(x);
+        },
+        "INIT": function () {
+            $activeDiv.css(changeXY(5, 5));
         }
     };
 
@@ -165,10 +171,25 @@ var activeDiv = (function () {
                 command[str](arr[2]);
                 x++;
             }
-        },200);
+        },450);
     }
 
+    function paint(x) {
+        var xx = state === 3?-parseInt(x):parseInt(x);
+        var nowX = parseInt(getXY().X);
+        function _paint() {
+            $("div[title = '"+getXY().Y+","+getXY().X+"']").css("background-color", "red");
+        }
+        moveSomeSteps(parseInt(x));
+        var timer = setInterval(function () {
+           if (getXY().X === nowX + xx) {
+               clearInterval(timer);
+           } else {
+               _paint();
+           }
+        },1);
 
+    }
 
     function move(x, y) {
         
@@ -190,8 +211,18 @@ var activeDiv = (function () {
             $activeDiv.addClass("activediv");
             $activeDiv.css(changeXY(x, y));
         },
-        handlerCommand: function () {
-            handlerCommand();
+        handlerCommand: function (event) {
+            var evt = event || window.event;
+            var target = evt.target || evt.srcElement;
+
+            switch (target.value) {
+                case "执行":
+                    handlerCommand();
+                    break;
+                case "清空":
+                    document.querySelector("#commandText").value = "";
+                    break;
+            }
         }
     }
 })();
@@ -200,8 +231,6 @@ var activeDiv = (function () {
 function init() {
     var commandBtn = document.getElementById("commandBtn");
     activeDiv.init(1, 1);
-    addListener(commandBtn, "click", function () {
-        activeDiv.handlerCommand();
-    });
+    addListener(commandBtn, "click", activeDiv.handlerCommand);
 }
 init();
