@@ -195,15 +195,14 @@ var activeDiv = (function () {
         
         var nowX = parseInt(getXY().left);
         var nowY = parseInt(getXY().top);
-        var terminalX = parseInt(changeXY(x, y).left);
-        var terminalY = parseInt(changeXY(x, y).top);
+        var terminalX = changeXY(x, y).left;
+        var terminalY = changeXY(x, y).top;
 
         if (terminalX !== nowX) {
-            $activeDiv.css("left", terminalX+"px");
+            $activeDiv.css("left", terminalX);
         } else {
-            $activeDiv.css("top", terminalY+"px");
+            $activeDiv.css("top", terminalY);
         }
-
     }
     
     return {
@@ -230,6 +229,7 @@ var activeDiv = (function () {
 
 function init() {
     var commandBtn = document.getElementById("commandBtn");
+    
     activeDiv.init(1, 1);
     addListener(commandBtn, "click", activeDiv.handlerCommand);
 }
