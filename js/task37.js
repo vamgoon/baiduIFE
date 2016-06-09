@@ -63,6 +63,7 @@ var creatDiv = (function () {
             oTitleText.innerHTML = titleText;
             oContent.innerHTML = content;
         },
+        
         dragMove: function () {
             var oBox = document.querySelector(".inner"), 
                 disX = 0, 
