@@ -64,7 +64,9 @@ var creatDiv = (function () {
             oContent.innerHTML = content;
         },
         dragMove: function () {
-            var oBox = document.querySelector(".inner"), disX = 0, disY = 0;
+            var oBox = document.querySelector(".inner"), 
+                disX = 0, 
+                disY = 0;
 
             oBox.onmousedown = function (event) {
                 var e = event || window.event;
